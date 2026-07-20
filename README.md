@@ -1,25 +1,45 @@
-# Antigravity IDE Project based on Windows + WSL2 (Ubuntu 24.04.2 LTS)
+# Antigravity IDE: Staff-level AI Engineering Workspace
 
-This repository contains hands-on examples, reusable skills, workflows, and best practices for building production-grade AI systems with Google Antigravity IDE.
+## 📌 TL;DR
+This workspace upgrades the Antigravity IDE from a standard code generator into a **Staff-level AI Engineer**. It enforces a strict, deterministic, and risk-averse pipeline across a hybrid Windows-WSL environment by utilizing custom environment invariants (`AGENTS.md`), local agent skills, and global security plugins.
 
-### 🏗️ Architecture & Agentic Workflow
+## 📦 What? (What is this repository?)
+This repository defines the operational boundaries and execution lifecycles for AI-assisted development. It consists of three core pillars:
+1. **Environment Invariants**: Hard rules (`AGENTS.md`) that dictate how paths, toolchains, and ephemeral states are handled to bridge Windows and WSL.
+2. **Custom AI Skills**: Specialized local skills (e.g., `liet-ke-files`, `cap-nhat-codes`) that act as architectural, alignment, and quality gates.
+3. **Advanced Security Integrations**: Deep hooks into the IDE's `securecoder` plugin ecosystem for threat modeling and dependency validation.
 
-This repository extends the Antigravity IDE by enforcing a highly deterministic, risk-averse engineering pipeline. The custom rules and skills are designed to elevate the AI from a naive code generator to a structured, Staff-level pair programmer that respects system invariants, manages blast radius, and guarantees isolated verification.
+## 🎯 Why? (Why do we need this strict structure?)
+*   **Prevent Environment Drift**: Windows and WSL (Ubuntu) file systems and binaries often clash. We enforce hard boundaries to prevent the AI from executing Windows `powershell` or polluting global host states.
+*   **Prevent "Blind" AI Mutations**: Naive AI writes code first and asks questions later. A Staff-level AI must understand the architecture, define the blast radius, and sync context *before* modifying a single line of code.
+*   **Zero-Trust Security & Quality**: AI-generated code introduces risks (hallucinations, logic flaws, vulnerable dependencies). We require isolated, deterministic quality gates (RAG accuracy, LLM-as-a-judge, CWE scanning) before accepting changes.
 
-#### 1. System Invariants & Environment Isolation (`AGENTS.md`)
-To prevent environment drift and state mutation, the workspace enforces a strict boundary between the host OS (Windows) and the execution context (WSL).
-*   **Path Determinism:** Enforces WSL network paths (`\\wsl.localhost\...`) across all agent interactions, ensuring the Windows host can reliably resolve execution targets without ambiguity.
-*   **Execution Lock & Preflight Gates:** Prevents the AI from accidentally utilizing global host toolchains. All executions (Python, Pytest, Ruff, Pyright) are strictly locked to the project's local `.venv`. A mandatory preflight capability check acts as a hard gate, instantly halting workflows if a guest/host environment mismatch is detected.
-*   **Sandboxed Ephemeral State:** All generated logs, caches, and test artifacts are aggressively routed to an isolated project-level sandbox (e.g., `var/tmp/antigravity/`). This guarantees zero pollution of the global OS state, mimicking the purity of a hermetic CI/CD runner.
+## ⏳ When? (When are these rules and skills applied?)
+The invariants in `AGENTS.md` apply to **every single interaction**. The local skills are triggered systematically across four distinct lifecycle phases:
+1.  **Before Coding (Discovery & Design):** When a task is assigned, the AI maps the risk surface, designs the multi-agent architecture, and synchronizes the scope of work.
+2.  **During Coding (Controlled Mutation):** When writing code, the AI enforces structural invariants (e.g., preventing drift, managing dependencies).
+3.  **Before Merging (Verification):** When the logic is complete, the AI runs isolated Pytest/Ruff checks and specialized AI evaluations.
+4.  **When Adding Dependencies (Security):** The AI strictly scans packages and builds threat models before allowing new third-party libraries.
 
-#### 2. The Risk-Based Engineering Pipeline & AI Capabilities (Custom Skills)
-The workspace defines a multi-stage, gated execution lifecycle within the Antigravity IDE. It acts not just as a coder, but as a **Staff AI Engineer**, structurally preventing the AI from mutating code without establishing intent, bounding the risk, designing the AI architecture, and planning verification.
+## 📍 Where? (Where does execution happen?)
+Execution is heavily sandboxed to guarantee determinism and protect the host machine:
+*   **Pathing**: Exclusively uses WSL network paths (`\\wsl.localhost\Ubuntu-2404\home\lavie\...`) or absolute Linux paths.
+*   **Compute (Preflight Gate)**: Locked strictly to the local virtual environment. A Preflight Gate ensures the correct Python version (e.g., 3.12) is running via `.venv/bin/python`; otherwise, it throws a `python_preflight_error`.
+*   **Storage (Sandbox Root)**: Ephemeral data (logs, pytest caches) is forcibly routed to `/home/lavie/dev/work/nhiem_vu/kn_antigravity_ide/var/tmp/codex/`. Global OS temp directories (`/tmp/` or Windows `Temp`) are strictly blocked.
 
-*   **Phase 1: Discovery, Bounding & AI Architecture (`liet-ke-files`, `phan-tich-va-de-xuat-checklist`, `thiet-ke-luong-ai-va-multi-agent`)**
-    Before any code is altered, the agent maps the blast radius. It identifies the impacted risk surface and drafts an architectural intent. For AI-specific tasks, it acts as a Solution Architect: explicitly defining LangGraph state machines, Multi-Agent contracts, and data ingestion pipelines (PDF/OCR to Qdrant) before implementation.
-*   **Phase 2: Context Alignment (`dong-bo-codebase-va-scope-of-work`, `cap-nhat-checklist`)**
-    The agent continuously synchronizes the scope of work with the actual state of the codebase. By maintaining a "living checklist", it ensures strict adherence to system invariants, prevents scope creep, and maintains clear traceability.
-*   **Phase 3: Controlled Mutation & AI Integrity (`cap-nhat-codes`)**
-    Code is never blindly generated. Modifications are routed through a "Risk-Based Engineering Gate" that enforces strict structural controls. It strictly adheres to AI Coding Invariants, such as ensuring deterministic outputs (`temperature=0` for Legal AI), preserving document layouts during OCR, and securing database connections (S3/Redis/Postgres).
-*   **Phase 4: Isolated Verification & AI Eval (`kiem-tra-chat-luong-codes`, `kiem-tra-chat-luong-ai-va-legal`)**
-    A mandatory Quality Gate concludes the pipeline. Beyond standard linting and static typing, it introduces a strict **AI Eval Gate**. It runs RAG precision/recall tests and LLM-as-a-judge hallucination checks within the isolated Antigravity sandbox, ensuring AI logic is functionally correct and legally compliant before the workflow is marked complete.
+## ⚙️ How? (How does the AI operate?)
+The AI operates via a multi-stage **Risk-Based Engineering Pipeline**:
+1.  **Phase 1 - Bounding & Architecture**: Uses `liet-ke-files`, `phan-tich-va-de-xuat-checklist`, and `thiet-ke-luong-ai-va-multi-agent` to establish intent and design LangGraph/Data pipelines.
+2.  **Phase 2 - Context Alignment**: Uses `dong-bo-codebase-va-scope-of-work` and `cap-nhat-checklist` to sync the state without mutating code.
+3.  **Phase 3 - Controlled Mutation**: Uses `cap-nhat-codes` to apply risk-mitigated code generation.
+4.  **Phase 4 - Isolated Verification**: Uses `kiem-tra-chat-luong-codes` (lint/test) and `kiem-tra-chat-luong-ai-va-legal` (AI hallucination/legal checks).
+5.  **Phase 5 - Security Lifecycle**: Uses `scan_dependencies` and `determine-threat-model` to validate external packages and secure the system architecture.
+
+## 💡 Illustrated Example (Ví dụ minh họa)
+**Scenario**: The user asks the agent to *"Add a Redis caching layer for the LangGraph state machine."*
+
+1.  **Preflight (Where/Why)**: The agent verifies it's operating in WSL. It triggers `.venv/bin/python` to check the environment. If it matches, it proceeds.
+2.  **Discovery (How - Phase 1)**: The agent calls `liet-ke-files` to identify the state manager file and `thiet-ke-luong-ai-va-multi-agent` to design how the cache integrates with the existing Multi-Agent contract.
+3.  **Security & Sync (When/How - Phase 2)**: Before importing `redis-py`, the agent calls `scan_dependencies` to validate the package version. It uses `determine-threat-model` to identify that Redis lacks TLS by default, adding this risk to the `cap-nhat-checklist`.
+4.  **Mutation (How - Phase 3)**: The agent uses `cap-nhat-codes` to write the Redis integration, explicitly forcing secure connection string handling as planned.
+5.  **Verification (Where/How - Phase 4)**: The agent runs `kiem-tra-chat-luong-codes` inside the `var/tmp/codex/` sandbox to ensure unit tests pass, generating isolated cache files without polluting the Windows host.
